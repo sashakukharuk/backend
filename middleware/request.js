@@ -1,5 +1,7 @@
 const axios = require("axios")
-const instance = axios.create({
+require("dotenv").config()
+
+module.exports = axios.create({
     baseURL: process.env.JIRA_URL,
     headers: {
         'Authorization': `Basic ${Buffer.from(
@@ -8,4 +10,4 @@ const instance = axios.create({
         'Accept': 'application/json'
     }
 })
-module.exports = instance
+

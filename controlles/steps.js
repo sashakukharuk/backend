@@ -10,16 +10,16 @@ const db = mysql.createConnection({
     database: process.env.DATABASE
 })
 
-// db.connect((err) => {
-//     if(err) Logger.get().info(err)
-//     Logger.get().info('Database connected')
-// })
+db.connect((err) => {
+    if(err) Logger.get().info(err)
+    Logger.get().info('Database connected')
+})
 
 module.exports.getUserInfo = async (req, res) => {
     const sub = req.params.sub
     await db.query("SELECT * FROM `users` WHERE user_sub =?", [sub], async (err, result) => {
         try {
-            if (result) {
+            if (result[0]) {
                 res.status(200).json(result[0])
             } else {
                 await db.query("INSERT INTO `users` SET ?", {user_sub: sub}, async (err) => {
@@ -38,7 +38,7 @@ module.exports.getUserInfo = async (req, res) => {
 
 module.exports.stepLink = async (req, res) => {
     const {link, userInfo} = req.body
-    await db.query("INSERT INTO `step_link` SET ?", {link, user_id: userInfo.id, date: moment(Date.now()).format('YYYY-MM-DD')}, (err, result) => {
+    await db.query("INSERT INTO `step_link` SET ?", {link, user_id: userInfo.id, date: moment(Date.now()).format('YYYY-MM-DD'), time: moment(Date.now()).format('HH:mm:ss')}, (err, result) => {
         try {
             res.status(200).json(result)
         } catch (err) {
@@ -49,7 +49,7 @@ module.exports.stepLink = async (req, res) => {
 
 module.exports.stepChangeFilter = async (req, res) => {
     const {jql, userInfo} = req.body
-    await db.query("INSERT INTO `change_filter` SET ?", {jql, user_id: userInfo.id, date: moment(Date.now()).format('YYYY-MM-DD')}, (err, result) => {
+    await db.query("INSERT INTO `change_filter` SET ?", {jql, user_id: userInfo.id, date: moment(Date.now()).format('YYYY-MM-DD'), time: moment(Date.now()).format('HH:mm:ss')}, (err, result) => {
         try {
             res.status(200).json(result)
         } catch (err) {
@@ -60,7 +60,7 @@ module.exports.stepChangeFilter = async (req, res) => {
 
 module.exports.stepGenerationTable = async (req, res) => {
     const {userInfo} = req.body
-    await db.query("INSERT INTO `generation_table` SET ?", {user_id: userInfo.id, date: moment(Date.now()).format('YYYY-MM-DD')}, (err, result) => {
+    await db.query("INSERT INTO `generation_table` SET ?", {user_id: userInfo.id, date: moment(Date.now()).format('YYYY-MM-DD'), time: moment(Date.now()).format('HH:mm:ss')}, (err, result) => {
         try {
             res.status(200).json(result)
         } catch (err) {
@@ -71,7 +71,7 @@ module.exports.stepGenerationTable = async (req, res) => {
 
 module.exports.stepError = async (req, res) => {
     const {error, userInfo} = req.body
-    await db.query("INSERT INTO `errors` SET ?", {error, user_id: userInfo.id, date: moment(Date.now()).format('YYYY-MM-DD')}, (err, result) => {
+    await db.query("INSERT INTO `errors` SET ?", {error, user_id: userInfo.id, date: moment(Date.now()).format('YYYY-MM-DD'), time: moment(Date.now()).format('HH:mm:ss')}, (err, result) => {
         try {
             res.status(200).json(result)
         } catch (err) {

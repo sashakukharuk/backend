@@ -1,5 +1,5 @@
 const {filter, gradation} = require("./FilterGradationData")
-const differentDate = require("../middleware/differentDate")
+const {differentDate} = require("./differentDate")
 const {createLevelsArray, createPositionsPoint} = require("./CreateArrayPositions")
 
 module.exports = function ParseIssue() {
@@ -57,7 +57,6 @@ module.exports = function ParseIssue() {
 
     this.filterIssues = () => {
         this.data.issues.forEach(issue => {
-            console.log(issue.fields.assignee.displayName)
             this.assignee.forEach(item => {
                 const displayName = issue.fields.assignee ? issue.fields.assignee.displayName : 'Assignee'
                 if (item.name === displayName) {
